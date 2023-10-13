@@ -5,9 +5,8 @@ public class Fish_Flock : MonoBehaviour
     [SerializeField] private float _minSpeed = 0.1f;
     [SerializeField] private float _maxSpeed = 0.5f;
     [SerializeField] private float _rotationSpeed = 4.0f;
-    [SerializeField] private Vector3 _averageHeading;
-    [SerializeField] private Vector3 _averagePosition;
     [SerializeField] private float _neighbourDistance = 2.0f;
+    [SerializeField] private float _avoidanceDistance = 2.0f;
 
     private float _speed;
     private bool _turning;
@@ -68,7 +67,7 @@ public class Fish_Flock : MonoBehaviour
                     vcenter = go.transform.position;
                     groupSize++;
 
-                    if (dist < 1.0f)
+                    if (dist < _avoidanceDistance)
                     {
                         vavoid = vavoid + (this.transform.position - go.transform.position);
                     }

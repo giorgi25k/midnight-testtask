@@ -245,12 +245,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6f44baba4bce29479abeb5addc55d35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minSpeed: 0.5
-  _maxSpeed: 1
+  _minSpeed: 1
+  _maxSpeed: 2
   _rotationSpeed: 0.2
-  _averageHeading: {x: 0, y: 0, z: 0}
-  _averagePosition: {x: 0, y: 0, z: 0}
   _neighbourDistance: 5
+  _avoidanceDistance: 2
 --- !u!1 &7697777474362671975
 GameObject:
   m_ObjectHideFlags: 0
