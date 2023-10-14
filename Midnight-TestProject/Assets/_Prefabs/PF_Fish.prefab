@@ -210,6 +210,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1691188908939542128}
   - component: {fileID: 1201307386036151321}
+  - component: {fileID: 5247859939962446621}
   m_Layer: 0
   m_Name: PF_Fish
   m_TagString: Untagged
@@ -250,6 +251,29 @@ MonoBehaviour:
   _rotationSpeed: 0.2
   _neighbourDistance: 5
   _avoidanceDistance: 2
+  _targetFood: {fileID: 0}
+  _agentPrefabToSpawn: {fileID: 4096777665779342989}
+--- !u!135 &5247859939962446621
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4096777665779342989}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7697777474362671975
 GameObject:
   m_ObjectHideFlags: 0

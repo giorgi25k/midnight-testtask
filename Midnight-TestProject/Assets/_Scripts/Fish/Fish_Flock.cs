@@ -8,11 +8,16 @@ public class Fish_Flock : MonoBehaviour
     [SerializeField] private float _neighbourDistance = 2.0f;
     [SerializeField] private float _avoidanceDistance = 2.0f;
 
+    [SerializeField] private Transform _targetFood;
+    [SerializeField] private GameObject _agentPrefabToSpawn;
+
     private float _speed;
     private bool _turning;
 
     void Start()
     {
+        GameManager.Instance.fish.Add(this);
+        UIManager.Instance.UpdateFishCountText(GameManager.Instance.fish.Count);
         _speed = Random.Range(_minSpeed, _maxSpeed);
     }
 
@@ -40,8 +45,61 @@ public class Fish_Flock : MonoBehaviour
             }
         }
 
-        transform.Translate(0, 0, Time.deltaTime * _speed);
+        if (_targetFood == null)
+        {
+            foreach (GameObject food in FoodManager.allFood)
+            {
+                if (food != null) // Add a null check for food
+                {
+                    float distToFood = Vector3.Distance(food.transform.position, transform.position);
+                    if (distToFood <= _neighbourDistance)
+                    {
+                        // Change the target food and spawn a new agent
+                        _targetFood = food.transform;
+
+                        // Spawn a new agent when agents interact near the food
+                        SpawnNewAgent();
+
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        if (_targetFood != null)
+        {
+            Vector3 foodDirection = _targetFood.position - transform.position;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(foodDirection), _rotationSpeed * Time.deltaTime);
+
+            // Move towards the food
+            transform.Translate(foodDirection.normalized * Time.deltaTime * _speed);
+        }
+        else
+        {
+            // If there is no food target, continue your previous movement
+            transform.Translate(0, 0, Time.deltaTime * _speed);
+        }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Food"))
+        {
+            Destroy(other.gameObject);
+            _targetFood = null;
+        }
+    }
+
+    private void SpawnNewAgent()
+    {
+        if (_agentPrefabToSpawn != null)
+        {
+            // Instantiate a new agent at the current position of this agent
+            GameObject newAgent = Instantiate(_agentPrefabToSpawn, transform.position, Quaternion.identity);
+        }
+    }
+
 
     private void ApplyRules()
     {
@@ -64,7 +122,7 @@ public class Fish_Flock : MonoBehaviour
                 dist = Vector3.Distance(go.transform.position, this.transform.position);
                 if (dist <= _neighbourDistance)
                 {
-                    vcenter = go.transform.position;
+                    vcenter = vcenter + go.transform.position;
                     groupSize++;
 
                     if (dist < _avoidanceDistance)
@@ -76,18 +134,48 @@ public class Fish_Flock : MonoBehaviour
                     gSpeed = gSpeed + anotherFlock._speed;
                 }
             }
+        }
 
-            if (groupSize > 0)
+        // Check for food target
+        if (_targetFood == null)
+        {
+            foreach (GameObject food in FoodManager.allFood)
             {
-                vcenter = vcenter / groupSize + (goalPos - transform.position);
-                _speed = gSpeed / groupSize;
-
-                Vector3 direction = (vcenter + vavoid) - transform.position;
-                if (direction != Vector3.zero)
+                if (food != null) // Add a null check for food
                 {
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), _rotationSpeed * Time.deltaTime);
+                    float distToFood = Vector3.Distance(food.transform.position, transform.position);
+                    if (distToFood <= _neighbourDistance)
+                    {
+                        _targetFood = food.transform;
+                        break;
+                    }
                 }
             }
         }
+
+        if (_targetFood != null)
+        {
+            Vector3 foodDirection = _targetFood.position - transform.position;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(foodDirection), _rotationSpeed * Time.deltaTime);
+
+            // Move towards the food
+            transform.Translate(foodDirection.normalized * Time.deltaTime * _speed);
+        }
+        else
+        {
+            // If there is no food target, continue your previous movement
+            transform.Translate(0, 0, Time.deltaTime * _speed);
+        }
     }
+    public void SetSpeed(float newSpeed)
+    {
+        _speed = newSpeed;
+    }
+
+    // Method to set the fish's turning speed
+    public void SetTurningSpeed(float newTurningSpeed)
+    {
+        _rotationSpeed = newTurningSpeed;
+    }
+
 }

@@ -6,7 +6,7 @@ public class FishManager : MonoBehaviour
 {
     [SerializeField] private GameObject _fishPrefab;
 
-    public static int _numFish = 100;
+    public static int _numFish = 10;
     public static int tankSize = 8;
     public static GameObject[] allFish = new GameObject[_numFish];
     public static Vector3 goalPos = Vector3.zero;
